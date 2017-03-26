@@ -1,0 +1,107 @@
+% This buffer is for notes you don't want to save.
+% If you want to create a file, visit that file with C-x C-f,
+% then enter the text in that file's own buffer.
+
+%P01 Find the last element of a list
+
+my-last(E,L) :-
+    L = [E].
+my-last(E,L):-
+    L = [_|X],
+    my-last(E,X).
+
+%P02 Find the last but one element of a list
+
+last_but_one(E,L) :-
+    L = [E,_].
+last_but_one(E,L) :-
+    L = [_,X|Y],
+    last_but_one(E,[X|Y]).
+
+%P03 Find the K`th element of a list
+
+element_at(X,[X|_],1).
+element_at(X,[_|L],K) :-
+    K>1,
+    K1 is K-1,
+    element_at(X,L,K1).
+
+%P04 Find the number of elements of a list
+
+my_lenght([],0).
+my_lenght([_|L],N) :-
+    my_lenght(L,N1),
+    N is N1 +1.
+
+%PO5 Reverse a list
+
+my_reverse(L1,L2) :-
+    my_rev(L1,L2,[]).
+
+my_rev([],L2,L2) :-!.
+my_rev([H|T],Acc,L2) :-
+    my_rev(T,[H|Acc],L2).
+
+%P06 Palindrom
+
+is_palindrom(L) :-
+    reverse(L,L).
+
+%P07 Flatten a nested list structure
+
+my_flatten(X,[X]) :- \+ is_list(X).
+my_flatten([],[]).
+my_flatten([H|T],L) :-
+    my_flatten(H,NH),
+    my_flatten(T,NT),
+    append(NH,NT,L).
+
+%P08 Eliminate consecutive duplicates of a list
+
+compress([],[]).
+compress([X],[X]).
+compress([X,X|T],L2) :-
+    compress([X|T],L2).
+compress([X,Y|T],[X|T2]) :-
+    X \=Y,
+    compress([Y|T],T2).
+
+%P1 Find all chars after word
+
+find1([],_,_) :-!.
+find1([X,Y],X,[Y]).
+find1([_|T],X,R) :-
+    find1(T,X,R1),
+    R = R1.
+
+%P2 Find first char after word
+
+find2([],_,[]).
+find2([X,Y],X,[Y]) :-!.
+find2([X,Y|T],X,R) :-
+    find2([Y|T],X,R1),
+    R = [Y|R1],!.
+find2([_|T],X,R) :-
+    find2(T,X,R),!.
+
+%P3 Build tree from a list
+
+build([nil],nil).
+build([X,nil,nil],t(X,nil,nil)) :-!.
+build(L,T) :-
+    append([R],L1,Lt),
+    append(Lt,L2,L),
+    T=t(R,S,D),
+    build(L1,S),
+    build(L2,D).
+
+%Even/Odd lists
+
+even_odd([],[],[]).
+even_odd([X],[],[X]).
+even_odd(L,E,O) :-
+    L=[X,Y|T],
+    even_odd(T,E1,O1),
+    E = [Y|E1],
+    O = [X|O1].
+
